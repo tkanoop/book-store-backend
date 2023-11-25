@@ -15,7 +15,6 @@ userSchema.methods.generateAuthToken=function(){
 }
 const User=mongoose.model("user",userSchema)
 
-
 // validation of data
 
 module.exports={User}
