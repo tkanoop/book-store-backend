@@ -5,6 +5,7 @@ const bcrypt=require("bcrypt")
 const {Book}=require("../models/books")
 const jwt=require('jsonwebtoken')
 const {Cart}=require("../models/cart")
+const {Order}= require("../models/order")
 const mongoose=require("mongoose")
 
 router.post("/",async(req,res)=>{
@@ -129,9 +130,78 @@ router.get("/cartView",async(req,res)=>{
 
 // change Quantity
 
-router.get("/change-qty",async(req,res)=>{
+router.patch("/change-qty",async(req,res)=>{
+  const qty=req.body.qty
+  const productId=req.body.productId
+  console.log(req.body)
+
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.JWTPRIVATEKEY);
+        const objectIdUserId = new mongoose.Types.ObjectId(decodedToken._id);
+
+        await Cart
+        .aggregate([
+            {
+                $unwind: '$product',
+            },
+        ])
+        .then(() => {
+            Cart
+                .updateOne(
+                    { userId: objectIdUserId, 'product.productId': productId },
+                    { $inc: { 'product.$.quantity': qty } },
+                )
+                .then(() => {
+                    res.json({ status: true });
+                    
+                });
+        });
   
+
 })
+
+
+// make order
+router.post("/make-order", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.JWTPRIVATEKEY);
+    const objectIdUserId = new mongoose.Types.ObjectId(decodedToken._id);
+    const cartList = await Cart.findOne({ userId: objectIdUserId }).populate({
+      path: 'product.productId',
+      model: 'book',
+    });
+
+    console.log("cartlistc", cartList);
+    const currentDate = new Date();
+
+    const formattedDate = currentDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+
+    const total = cartList.product.reduce((total, item) => item.productId.Price * item.quantity, 0);
+
+    const orderList = new Order({
+      user_id: cartList.userId,
+      products: cartList.product,
+      totalAmount: total,
+      order_placed_on: formattedDate,
+    });
+
+    await orderList.save();
+
+    
+    await Cart.deleteOne({ userId: objectIdUserId });
+
+    res.status(200).json({ message: 'Order placed successfully' });
+  } catch (error) {
+    console.error('Error placing order:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 

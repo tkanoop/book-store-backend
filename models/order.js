@@ -3,11 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { ObjectId } = Schema;
 const orderSchema = new Schema({
-  order_id: {
-    type: String,
-    unique: true,
-    required: true,
-  },
+
   user_id: {
     type: ObjectId,
     required: true,
@@ -34,18 +30,17 @@ const orderSchema = new Schema({
   paymentMethod: {
     type: String,
     required: true,
+    default:'COD'
   },
  
-  orderStatus: {
-    type: String,
-    default: 'Pending',
-  },
+
+ 
   order_placed_on: {
     type: String,
     required: true,
-  },
+  },  
 
 }, )
 
-const Orders = mongoose.model('order', orderSchema);
-module.exports = Orders;
+const Order = mongoose.model('order', orderSchema);
+module.exports = {Order};
