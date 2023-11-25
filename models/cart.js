@@ -11,7 +11,9 @@ const cartSchema = new Schema(
       {
         productId: {
           type: ObjectId,
+
           required: true,
+          ref: 'Book'
         },
         quantity: {
           type: Number,

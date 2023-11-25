@@ -86,6 +86,56 @@ router.post("/cart",async(req,res)=>{
         res.status(500).json({ error: 'Internal Server Error' });
       }
     });
+
+// fetching cart items
+router.get("/cartView",async(req,res)=>{
+  console.log("request came");
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.JWTPRIVATEKEY);
+        const objectIdUserId = new mongoose.Types.ObjectId(decodedToken._id); 
+        console.log("hiiii");
+
+
+        const cartList = await Cart.findOne({ userId: objectIdUserId }).populate({
+          path: 'product.productId',
+          model: 'book',
+        });
+        
+        
+        if (cartList) {
+          
+          console.log("check "+cartList.product);
+        
+          
+          const productImages = cartList.product.map((item) => ({
+            productId: item.productId._id,
+            Quantity: item.quantity,
+            bookName: item.productId.bookName,
+            Price: item.productId.Price,
+          
+            Category: item.productId.Category,
+            Image: item.productId.Image,
+
+            
+          }));
+          console.log((productImages));
+        
+          res.status(200).send({ cart: productImages });
+        } else {
+          res.status(404).send({ message: 'Cart not found' });
+        }
+  
+})
+
+// change Quantity
+
+router.get("/change-qty",async(req,res)=>{
+  
+})
+
+
+
+
     
 
 const validate=(data)=>{
