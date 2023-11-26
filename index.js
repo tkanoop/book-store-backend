@@ -13,7 +13,9 @@ connection()
 
 // middleware
 app.use(express.json())
-app.use(cors())
+// Enable CORS for a specific origin
+app.use(cors({ origin: 'https://656286dee167cf0bdd5302f6--celadon-unicorn-cc9e09.netlify.app' }));
+
 
 
 // routes
