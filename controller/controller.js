@@ -5,6 +5,8 @@ const {Book}=require("../models/books")
 const jwt=require('jsonwebtoken')
 const {Cart}=require("../models/cart")
 const {Order}= require("../models/order")
+const{validate} =require("../middlewares/signInValidation")
+const{validateSignUp}=require("../middlewares/signUpValidation")
 const mongoose=require("mongoose")
 const passwordComplexity=require('joi-password-complexity')
 
@@ -210,23 +212,8 @@ const makingOrder = async (req, res) => {
   }
 };
 
-const validate = (data) => {
-  const schema = Joi.object({
 
-    email: Joi.string().email().required().label("Email"),
-    password: Joi.string().required().label("Password"),
-  });
-  return schema.validate(data);
-};
-const validateSignUp = (data) => {
-  const schema = Joi.object({
-    firstName: Joi.string().required().label("First name"),
-    lastName: Joi.string().required().label("Last Name"),
-    email: Joi.string().email().required().label("Email"),
-    password:passwordComplexity().required().label("Password")
-  });
-  return schema.validateSignUp(data);
-};
+
 
 
 module.exports = {
@@ -238,6 +225,5 @@ module.exports = {
   fetchingCart,
   changingQuantity,
   makingOrder,
-  validate,
-  validateSignUp
+ 
 };
