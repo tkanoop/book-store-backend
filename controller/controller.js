@@ -8,7 +8,7 @@ const {Order}= require("../models/order")
 const{validate} =require("../middlewares/signInValidation")
 const{validateSignUp}=require("../middlewares/signUpValidation")
 const mongoose=require("mongoose")
-const passwordComplexity=require('joi-password-complexity')
+
 
 // checking existing user
 const   login = async (req, res) => {
