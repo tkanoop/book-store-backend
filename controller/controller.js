@@ -6,6 +6,7 @@ const jwt=require('jsonwebtoken')
 const {Cart}=require("../models/cart")
 const {Order}= require("../models/order")
 const mongoose=require("mongoose")
+const passwordComplexity=require('joi-password-complexity')
 
 // checking existing user
 const   login = async (req, res) => {
@@ -214,7 +215,7 @@ const validate = (data) => {
     firstName: Joi.string().required().label("First name"),
     lastName: Joi.string().required().label("Last Name"),
     email: Joi.string().email().required().label("Email"),
-    password: Joi.string().required().label("Password"),
+    password:passwordComplexity().required().label("Password")
   });
   return schema.validate(data);
 };
