@@ -7,7 +7,7 @@ const authmiddleware=require("../middlewares/authmiddleware")
 const routes = express.Router();
 
 routes.post("/auth", login);
-routes.post("/user/signup", signup);
+routes.post("/users", signup);
 
 routes.get("/auth/books", fetchBooks);
 routes.get("/auth/authentication",authmiddleware, authenticate);

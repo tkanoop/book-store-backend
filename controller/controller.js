@@ -8,7 +8,7 @@ const {Order}= require("../models/order")
 const mongoose=require("mongoose")
 
 // checking existing user
-const login = async (req, res) => {
+const   login = async (req, res) => {
   try {
     const { error } = validate(req.body);
     if (error) {
@@ -33,7 +33,9 @@ const login = async (req, res) => {
 // creating new user
 const signup = async (req, res) => {
   try {
+    console.log("hii");
     const { error } = validate(req.body);
+    console.log(error);
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
     }
@@ -81,7 +83,7 @@ const cartCreating = async (req, res) => {
         cart.product[existingProductIndex].quantity += 1;
        
         console.log("quanty added");
-        
+
       } else {
 
         cart.product.push({ productId: bookId, quantity: 1 });
@@ -209,6 +211,8 @@ const makingOrder = async (req, res) => {
 
 const validate = (data) => {
   const schema = Joi.object({
+    firstName: Joi.string().required().label("First name"),
+    lastName: Joi.string().required().label("Last Name"),
     email: Joi.string().email().required().label("Email"),
     password: Joi.string().required().label("Password"),
   });
