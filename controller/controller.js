@@ -6,7 +6,7 @@ const jwt=require('jsonwebtoken')
 const {Cart}=require("../models/cart")
 const {Order}= require("../models/order")
 const{validate} =require("../middlewares/signInValidation")
-const{validateSignUp}=require("../middlewares/signUpValidation")
+const{signUpValidate}=require("../middlewares/signUpValidation")
 const mongoose=require("mongoose")
 
 
@@ -37,7 +37,7 @@ const   login = async (req, res) => {
 const signup = async (req, res) => {
   try {
     console.log("hii");
-    const { error } = validate(req.body);
+    const { error } = signUpValidate(req.body);
     console.log(error);
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
