@@ -35,7 +35,7 @@ const   login = async (req, res) => {
 const signup = async (req, res) => {
   try {
     console.log("hii");
-    const { error } = validate(req.body);
+    const { error } = validateSignUp(req.body);
     console.log(error);
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
@@ -212,13 +212,22 @@ const makingOrder = async (req, res) => {
 
 const validate = (data) => {
   const schema = Joi.object({
+
+    email: Joi.string().email().required().label("Email"),
+    password: Joi.string().required().label("Password"),
+  });
+  return schema.validate(data);
+};
+const validateSignUp = (data) => {
+  const schema = Joi.object({
     firstName: Joi.string().required().label("First name"),
     lastName: Joi.string().required().label("Last Name"),
     email: Joi.string().email().required().label("Email"),
     password:passwordComplexity().required().label("Password")
   });
-  return schema.validate(data);
+  return schema.validateSignUp(data);
 };
+
 
 module.exports = {
   login,
@@ -230,4 +239,5 @@ module.exports = {
   changingQuantity,
   makingOrder,
   validate,
+  validateSignUp
 };
